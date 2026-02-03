@@ -1,0 +1,46 @@
+spring.application.name=Spring_Stigespill
+
+# ==========================================
+# 1. DATABASE (LOKAL H2)
+# ==========================================
+# Bruker H2 i minnet (data slettes hver gang du starter appen)
+spring.datasource.url=jdbc:h2:mem:stigespill;DB_CLOSE_DELAY=-1
+spring.datasource.driverClassName=org.h2.Driver
+spring.datasource.username=sa
+spring.datasource.password=
+spring.jpa.database-platform=org.hibernate.dialect.H2Dialect
+
+# Aktiver H2-konsollen slik at du kan se dataene i nettleseren
+# Gaa til http://localhost:8080/h2-console
+spring.h2.console.enabled=true
+
+# ==========================================
+# 2. INITIALISERING
+# ==========================================
+# Opprett tabeller automatisk ved oppstart
+spring.jpa.hibernate.ddl-auto=update
+
+# Kjor data.sql for aa legge inn brettet og rutene
+spring.sql.init.mode=always
+spring.jpa.defer-datasource-initialization=true
+
+# ==========================================
+# 3. TOTAL STILLHET (Kill switch)
+# ==========================================
+# Skru av SQL-printing
+spring.jpa.show-sql=false
+spring.jpa.properties.hibernate.show_sql=false
+spring.jpa.properties.hibernate.format_sql=false
+spring.jpa.properties.hibernate.use_sql_comments=false
+
+# Skru av Spring-logo og oppstartstekst
+spring.main.banner-mode=off
+spring.main.log-startup-info=false
+
+# Skru av ALLE logger som ikke er kritiske feil
+logging.level.root=ERROR
+logging.level.org.springframework=OFF
+logging.level.org.springframework.boot=OFF
+logging.level.org.hibernate=OFF
+logging.level.org.hibernate.SQL=OFF
+logging.level.com.zaxxer.hikari=OFF

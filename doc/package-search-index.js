@@ -1,0 +1,1 @@
+packageSearchIndex = [{"l":"All Packages","u":"allpackages-index.html"},{"l":"no.hvl.dat109.spring_stigespill"},{"l":"no.hvl.dat109.spring_stigespill.controller"},{"l":"no.hvl.dat109.spring_stigespill.model"},{"l":"no.hvl.dat109.spring_stigespill.repository"},{"l":"no.hvl.dat109.spring_stigespill.service"},{"l":"no.hvl.dat109.spring_stigespill.view"}];updateSearchResults();
