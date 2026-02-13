@@ -76,7 +76,7 @@ public class StigespillService {
             return spesialMelding;
         }
 
-        return utførFlytting(spill, spiller, brett, kast, gammelPlass);
+        return utforFlytting(spill, spiller, brett, kast, gammelPlass);
     }
 
     /**
@@ -131,7 +131,7 @@ public class StigespillService {
      * @param gammelPlass Posisjon før flytting.
      * @return Tekstlig beskrivelse av trekket.
      */
-    private String utførFlytting(Spill spill, Spiller s, Brett brett, int kast, int gammelPlass) {
+    private String utforFlytting(Spill spill, Spiller s, Brett brett, int kast, int gammelPlass) {
         if (gammelPlass + kast > 100) {
             avsluttTur(spill, s, kast, gammelPlass, gammelPlass, true);
             return s.getNavn() + ": triller " + kast + ". For høyt! Blir stående.";
