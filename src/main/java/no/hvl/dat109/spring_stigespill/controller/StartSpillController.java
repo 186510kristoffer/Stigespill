@@ -36,9 +36,8 @@ public class StartSpillController {
 		List <Spiller> spillere = oppsettService.lagSpillerListe(spillOppsett);
 		Spill nyttSpill = stigespillService.opprettNyttSpill(spillere);
 		
-		model.addAttribute("nyttSPill", nyttSpill);
 		
-		return "/stigespill";
+		return "redirect:/spill/" + nyttSpill.getId();
 	}
 	
 }

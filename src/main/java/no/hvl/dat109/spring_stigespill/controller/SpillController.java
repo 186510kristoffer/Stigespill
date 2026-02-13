@@ -41,6 +41,6 @@ public class SpillController {
 	public String trillTerning(@PathVariable("id") Long id, RedirectAttributes ra) {
 		stigespillService.spillTur(id);
 		ra.addAttribute("id", id);
-		return "redirect/spill{id}";
+		return "redirect:/spill{id}";
 	}	
 }
