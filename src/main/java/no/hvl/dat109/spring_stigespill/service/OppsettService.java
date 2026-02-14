@@ -3,9 +3,12 @@ package no.hvl.dat109.spring_stigespill.service;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.stereotype.Service;
+
 import no.hvl.dat109.spring_stigespill.dto.SpillOppsett;
 import no.hvl.dat109.spring_stigespill.model.Spiller;
 
+@Service
 public class OppsettService {
 	
 	public List<Spiller> lagSpillerListe(SpillOppsett spillOppsett) {

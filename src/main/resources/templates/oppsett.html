@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Nytt Spill</title>
+</head>
+<body>
+    <form th:action="@{/oppsett}" th:object="${oppsett}" method="post">
+        <div>
+            <label>Hvor mange spillere?</label>
+            <select id="valgtAntall" th:field="*{antallSpillere}" onchange="oppdaterAntallInput(this)">
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="4">4</option>
+            </select>
+        </div>
+        
+        <div id="f1"> 
+            <label>Spiller 1</label>
+            <input type="text" th:field="*{spillerNavn[0]}">
+        </div>
+        <div id="f2"> 
+            <label>Spiller 2</label>
+            <input type="text" th:field="*{spillerNavn[1]}">
+        </div>
+        <div id="f3" hidden> 
+            <label>Spiller 3</label>
+            <input type="text" th:field="*{spillerNavn[2]}">
+        </div>
+        <div id="f4" hidden>
+            <label>Spiller 4</label>
+            <input type="text" th:field="*{spillerNavn[3]}">
+        </div>
+        
+        <button type="submit">Start stigespillet</button>
+    </form>
+
+    <script>
+        function oppdaterAntallInput(select) {
+            const valgt = parseInt(select.value);
+            for (let i = 3; i <= 4; i++) {
+                const element = document.getElementById('f' + i);
+                element.hidden = (i > valgt);
+                if (element.hidden) {
+                    element.querySelector('input').value = "";
+                }
+            }
+        }
+    </script>
+</body>
+</html>

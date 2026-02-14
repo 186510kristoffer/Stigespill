@@ -22,11 +22,11 @@ public class StartSpillController {
 	@Autowired OppsettService oppsettService;
 	
 	
-	@GetMapping("oppsett")
+	@GetMapping("/oppsett")
 	public String visNyttSpillMeny(Model model) {
 		
 		model.addAttribute("oppsett", new SpillOppsett());
-		return "/oppsett";
+		return "oppsett";
 	}
 	
 	@PostMapping("/oppsett")
