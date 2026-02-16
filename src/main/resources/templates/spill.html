@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html xmlns:th="http//www.thymeleaf.com">
+	<head>
+	    <meta charset="UTF-8">
+	    <title>Stigespill</title>
+	</head>
+	<body>
+		<p th:text="|Dette er spill nr ${spill.id}|"></p>
+		<form th:action="@{/spill/{id}/trill(id=${spill.id})}" method="post">
+			<p th:text="${melding}"></p>
+			<button type="submit">Trill terning</button>
+		</form>
+	</body>
+</html>

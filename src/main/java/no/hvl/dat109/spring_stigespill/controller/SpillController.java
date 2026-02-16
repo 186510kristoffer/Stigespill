@@ -29,18 +29,18 @@ public class SpillController {
 	
 	@Autowired StigespillService stigespillService;
 
-	@GetMapping("/{id}")
+	@GetMapping("/spill/{id}")
 	public String visStigespill(@PathVariable("id") Long id, Model model) {
 		
 		Spill spill = stigespillService.hentSpill(id);
 		model.addAttribute("spill", spill);
-		return "/stigespill";
+		return "spill";
 		}
 	
-	@PostMapping("/{id}/trill")
+	@PostMapping("spill/{id}/trill")
 	public String trillTerning(@PathVariable("id") Long id, RedirectAttributes ra) {
-		stigespillService.spillTur(id);
-		ra.addAttribute("id", id);
-		return "redirect:/spill{id}";
+		String melding = stigespillService.spillTur(id);
+		ra.addFlashAttribute("melding", melding);
+		return "redirect:/spill/"+id;
 	}	
 }

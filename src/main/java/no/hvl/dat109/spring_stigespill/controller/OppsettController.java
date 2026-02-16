@@ -17,7 +17,7 @@ import no.hvl.dat109.spring_stigespill.service.OppsettService;
 import no.hvl.dat109.spring_stigespill.service.StigespillService;
 
 @Controller
-public class StartSpillController {
+public class OppsettController {
 	@Autowired StigespillService stigespillService;
 	@Autowired OppsettService oppsettService;
 	
@@ -35,7 +35,6 @@ public class StartSpillController {
 		
 		List <Spiller> spillere = oppsettService.lagSpillerListe(spillOppsett);
 		Spill nyttSpill = stigespillService.opprettNyttSpill(spillere);
-		
 		
 		return "redirect:/spill/" + nyttSpill.getId();
 	}
