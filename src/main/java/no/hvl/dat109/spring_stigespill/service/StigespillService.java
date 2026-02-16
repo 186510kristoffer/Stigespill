@@ -71,7 +71,7 @@ public class StigespillService {
         
         if(!type.equals("VANLIG")) {
         	boolean byttTur=(kast!=6);
-        	avsluttTur(spill, spiller, kast, gammelPlass, spiller.getPosisjon(), byttTur, type);
+        	return avsluttTur(spill, spiller, kast, gammelPlass, spiller.getPosisjon(), byttTur, type);
         }
 
         return utforFlytting(spill, spiller, brett, kast, gammelPlass);
@@ -109,9 +109,7 @@ public class StigespillService {
         if (s.getPosisjon() == 1 && kast != 6 && s.getAntallSekserePaaRad() == 0) {
             return "START_BLOKKERT";
         }
-        if (s.getPosisjon() == 1 && kast == 6) {
-            return "START_UT";
-        }
+        
         return "VANLIG"; 
     }
 
@@ -137,6 +135,10 @@ public class StigespillService {
         int nyPlass = brett.finnDestinasjon(gammelPlass, kast);
         spiller.setPosisjon(nyPlass);
         String type="VANLIG";
+        
+        if(gammelPlass==1) {
+        	type="START_UT";
+        }
         
         if(nyPlass>landerPaa) {
         	type="STIGE";

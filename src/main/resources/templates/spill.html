@@ -9,11 +9,12 @@
 		<form th:action="@{/spill/{id}/trill(id=${spill.id})}" method="post">
 			<div th:if="${sisteTrekk != null}">
 				<p>hei</p>
+				<p th:text="${sisteTrekk.tilRute}"></p>
 				<span th:if="${sisteTrekk.trekkType == 'STIGE'}">Fant en stige!</span>
 				<span th:if="${sisteTrekk.trekkType == 'SLANGE'}">Traff en slange</span>
 				<span th:if="${sisteTrekk.trekkType == 'START_BLOKKERT'}">start blokk</span>
 				<span th:if="${sisteTrekk.trekkType == 'START_UT'}">UT</span>
-				<span th:if="${sisteTrekk.trekkType == 'VNLIG'}">vanlig</span>
+				<span th:if="${sisteTrekk.trekkType == 'VANLIG'}">vanlig</span>
 			</div>
 			<button type="submit">Trill terning</button>
 		</form>
