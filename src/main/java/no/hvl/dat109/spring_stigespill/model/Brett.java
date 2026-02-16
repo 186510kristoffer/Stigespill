@@ -4,22 +4,20 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Configuration;
+
+import no.hvl.dat109.spring_stigespill.repository.RuteRepository;
+
 /**
  * Representerer spillbrettet og holder oversikt over alle ruter, 
  * inkludert stiger og slanger.
  */
+
+@Configuration
 public class Brett {
 	
-	private final Map <Integer, Rute> ruter = new HashMap<>();
-
-	/**
-	 * Oppretter et brett basert på en liste med ruter fra databasen.
-	 */
-	public Brett (List<Rute> alleRuter) {
-		for(Rute r : alleRuter) {
-			this.ruter.put(r.getId(), r);
-		}
-	}
+	@Autowired RuteRepository ruteRepository;
 	
 	/**
 	 * Beregner hvor en spiller ender opp etter et kast, 
@@ -33,18 +31,11 @@ public class Brett {
 		
 		if (nyPlassering > 100) return plassering; 
 
-		Rute landerPaa = ruter.get(nyPlassering);
+		Rute landerPaa = ruteRepository.findById(nyPlassering).orElse(null);
 		
 		if(landerPaa != null && landerPaa.erSpesialRute()) {
 			return landerPaa.getFlyttTil();
 		}
 		return nyPlassering;
-	}
-	
-	/**
-	 * Henter rute-objektet for et spesifikt nummer.
-	 */
-	public Rute hentRute(int nr) {
-		return ruter.get(nr);
 	}
 }

@@ -66,8 +66,13 @@ public class StigespillService {
         int gammelPlass = spiller.getPosisjon();
         
         int kast = terning.trill();
-        oppdaterSekserTeller(spiller, kast);
         String type=sjekkRegler(spiller, kast);
+        
+        if (type.equals("TRE_SEKSERE")) {
+            return avsluttTur(spill, spiller, kast, gammelPlass, spiller.getPosisjon(), false, type);
+       }
+        
+        oppdaterSekserTeller(spiller, kast);
         
         if(!type.equals("VANLIG")) {
         	boolean byttTur=(kast!=6);
@@ -106,10 +111,15 @@ public class StigespillService {
             return "TRE_SEKSERE";
         }
 
-        if (s.getPosisjon() == 1 && kast != 6 && s.getAntallSekserePaaRad() == 0) {
-            return "START_BLOKKERT";
+        if (s.getPosisjon() == 1) {
+        	if(s.getAntallSekserePaaRad()==0) {
+        		if(kast==6) {
+        			return "START_UT";
+        		}else {
+        			return "START_BLOKKERT";
+        		}
+        	}
         }
-        
         return "VANLIG"; 
     }
 
