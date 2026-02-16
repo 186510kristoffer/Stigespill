@@ -5,9 +5,10 @@
 	    <title>Stigespill</title>
 	</head>
 	<body>
-		<p th:text="|Dette er spill nr ${spill.id}|"></p>
+		<p th:text="Dette er spill nr ${spill.id}"></p>
 		<form th:action="@{/spill/{id}/trill(id=${spill.id})}" method="post">
-			<p th:text="${melding}"></p>
+			<span th:if="${t.type == 'STIGE'}">Fant en stige!</span>
+			<span th:if="${t.type == 'SLANGE'}">Traff en slange</span>
 			<button type="submit">Trill terning</button>
 		</form>
 	</body>

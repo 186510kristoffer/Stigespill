@@ -31,11 +31,11 @@ public class StigespillService {
     @Autowired
     private SpillerRepository spillerRepository;
     @Autowired
-    private RuteRepository ruteRepository;
-    @Autowired
     private TrekkRepository trekkRepository;
     @Autowired 
     private Terning terning;//for å kunne testes
+    @Autowired 
+    private Brett brett;
     
     /**
      * Oppretter et nytt spillobjekt med gitte spillere.
@@ -54,26 +54,24 @@ public class StigespillService {
      * @return En tekststreng som beskriver hva som skjedde.
      */
     @Transactional
-    public String spillTur(Long spillId) {
+    public Trekk spillTur(Long spillId) {
         Spill spill = spillRepository.findById(spillId).orElse(null);
 
-        if (spill == null) return "Ukjent spill ID";
-        if (spill.erFerdig()) return "Spillet er ferdig!";
+        if (spill == null) return null;
+        if (spill.erFerdig()) return null;
         
         spill.getSpillere().sort(Comparator.comparing(Spiller::getId));
-        List<Rute> alleRuter = ruteRepository.findAll();
-        Brett brett = new Brett(alleRuter);
-        
+       
         Spiller spiller = spill.nesteSpiller();
         int gammelPlass = spiller.getPosisjon();
-        int seksereStart = spiller.getAntallSekserePaaRad(); 
         
         int kast = terning.trill();
         oppdaterSekserTeller(spiller, kast);
+        String type=sjekkRegler(spiller, kast);
         
-        String spesialMelding = sjekkStartOgSekserRegler(spill, spiller, kast, gammelPlass, seksereStart);
-        if (spesialMelding != null) {
-            return spesialMelding;
+        if(type!="VANLIG") {
+        	boolean byttTur=(kast!=6);
+        	avsluttTur(spill, spiller, kast, gammelPlass, spiller.getPosisjon(), byttTur, type);
         }
 
         return utforFlytting(spill, spiller, brett, kast, gammelPlass);
@@ -101,67 +99,57 @@ public class StigespillService {
      * @param seksereStart Antall seksere spilleren hadde FØR dette kastet.
      * @return Melding hvis en regel inntraff, ellers null.
      */
-    private String sjekkStartOgSekserRegler(Spill spill, Spiller s, int kast, int plass, int seksereStart) {
+    private String sjekkRegler(Spiller s, int kast) {
         if (s.getAntallSekserePaaRad() == 3) {
             s.setPosisjon(1);
             s.setAntallSekserePaaRad(0);
-            avsluttTur(spill, s, kast, plass, 1, true); 
-            return s.getNavn() + ": triller 6 (3. gang!) -> rute 1 (Tilbake til start)";
+            return "TRE_SEKSERE";
         }
 
-        if (plass == 1 && kast != 6 && seksereStart == 0) {
-            avsluttTur(spill, s, kast, 1, 1, true); 
-            return s.getNavn() + ": triller " + kast + ", rute 1 -> 1. Må ha 6.";
+        if (s.getPosisjon() == 1 && kast != 6 && s.getAntallSekserePaaRad() == 0) {
+            return "START_BLOKKERT";
         }
-        
-        if (plass == 1 && kast == 6) {
-            avsluttTur(spill, s, kast, 1, 1, false); 
-            return s.getNavn() + ": triller 6! Ute av start.";
+        if (s.getPosisjon() == 1 && kast == 6) {
+            return "START_UT";
         }
-        
-        return null; 
+        return "VANLIG"; 
     }
 
     /**
      * Håndterer selve forflytningen, inkludert >100 regel, slanger og stiger.
+     * Sjekker først om man er forbi mål, og avslutter hvis man er det
+     * Så vil flytting bli gjort, og type bli satt
      * @param spill Det aktuelle spillet.
-     * @param s Spilleren som flytter.
+     * @param spiller Spilleren som flytter.
      * @param brett Brett-objektet for å sjekke ruter.
      * @param kast Terningkastet.
      * @param gammelPlass Posisjon før flytting.
-     * @return Tekstlig beskrivelse av trekket.
+     * @return trekk i form av avsluttTur(...).
      */
-    private String utforFlytting(Spill spill, Spiller s, Brett brett, int kast, int gammelPlass) {
+    private Trekk utforFlytting(Spill spill, Spiller spiller, Brett brett, int kast, int gammelPlass) {
+    	
         if (gammelPlass + kast > 100) {
-            avsluttTur(spill, s, kast, gammelPlass, gammelPlass, true);
-            return s.getNavn() + ": triller " + kast + ". For høyt! Blir stående.";
+        	boolean byttTur=(kast!=6);
+            return avsluttTur(spill, spiller, kast, gammelPlass, gammelPlass, byttTur, "FORBI");
         }
         
         int landerPaa = gammelPlass + kast;
         int nyPlass = brett.finnDestinasjon(gammelPlass, kast);
-        s.setPosisjon(nyPlass);
-
-        String ekstra = "";
-        Rute rute = brett.hentRute(landerPaa);
-        if (rute != null) {
-            if (rute.erStige()) ekstra = " (stige " + landerPaa + " -> " + nyPlass + ")";
-            else if (rute.erSlange()) ekstra = " (slange " + landerPaa + " -> " + nyPlass + ")";
+        spiller.setPosisjon(nyPlass);
+        String type="VANLIG";
+        
+        if(nyPlass>landerPaa) {
+        	type="STIGE";
         }
-
-        if (nyPlass == 100) {
-            spill.setFerdig(true);
-            avsluttTur(spill, s, kast, gammelPlass, nyPlass, false);
-            return s.getNavn() + ": triller " + kast + " -> MÅL!";
-        } else {
-            boolean nyttKast = (kast == 6);
-            avsluttTur(spill, s, kast, gammelPlass, nyPlass, !nyttKast);
-            
-            String melding = s.getNavn() + ": triller " + kast 
-                           + ", rute " + gammelPlass + " -> " + nyPlass + ekstra;
-            if (nyttKast) melding += " (Nytt kast!)";
-            
-            return melding;
+        else if(nyPlass<landerPaa) {
+        	type="SLANGE";
         }
+        else if(nyPlass==100) {
+        	type="VINNER";
+        }
+        boolean byttTur = (kast!=6);
+        
+        return avsluttTur(spill, spiller, kast, gammelPlass, nyPlass, byttTur, type);
     }
 
     /**
@@ -173,14 +161,19 @@ public class StigespillService {
      * @param til Rute etter flytting.
      * @param byttTur Om turen skal gå videre til neste.
      */
-    private void avsluttTur(Spill spill, Spiller s, int k, int fra, int til, boolean byttTur) {
-        spill.leggTilTrekk(new Trekk(spill, k, fra, til, s.getNavn(), LocalDateTime.now()));
+    private Trekk avsluttTur(Spill spill, Spiller s, int k, int fra, int til, boolean byttTur, String trekkType) {
         
-        if (byttTur) {
+    	Trekk trekk= new Trekk(spill, k, fra, til, s.getNavn(), LocalDateTime.now(), trekkType);
+        trekkRepository.save(trekk);
+        
+        if(spill.erFerdig()) {}
+        else if(byttTur) {
             spill.setNesteSpillerIndex((spill.getNesteSpillerIndex() + 1) % spill.getSpillere().size());
         }
         spillerRepository.save(s);
         spillRepository.save(spill);
+        
+        return trekk;
     }
     
     /**

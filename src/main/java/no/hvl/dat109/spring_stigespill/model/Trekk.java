@@ -3,6 +3,8 @@ package no.hvl.dat109.spring_stigespill.model;
 import java.time.LocalDateTime;
 
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -23,6 +25,7 @@ public class Trekk {
 	private int tilRute;
 	private String spillerNavn;
 	private LocalDateTime tidspunkt;
+	private String trekkType;
 	
 	@ManyToOne
 	@JoinColumn(name="spill_id")
@@ -33,7 +36,7 @@ public class Trekk {
 	/** Oppretter et trekk med informasjon om kast, flytting og tidspunkt. */
 	public Trekk(Spill spill, int terningkast, int fraRute,
 			int tilRute, String spillerNavn, 
-			LocalDateTime tidspunkt) {
+			LocalDateTime tidspunkt, String trekkType) {
 		
 		this.spill=spill;
 		this.spillerNavn=spillerNavn;
@@ -41,13 +44,14 @@ public class Trekk {
 		this.fraRute=fraRute;
 		this.tilRute=tilRute;
 		this.tidspunkt=tidspunkt;
+		this.trekkType=trekkType;
 	}
 	
 	public Long getId() {return id;}
-	public String getSpillerNavn() {return spillerNavn;}
-	public int getTerningkast() {return terningkast;}
-	public int getFraRute() {return fraRute;}
-	public int getTilRute() {return tilRute;}
-	public LocalDateTime getTidspunkt() {return tidspunkt;}
-	
+	public String getSpillerNavn() {return this.spillerNavn;}
+	public int getTerningkast() {return this.terningkast;}
+	public int getFraRute() {return this.fraRute;}
+	public int getTilRute() {return this.tilRute;}
+	public LocalDateTime getTidspunkt() {return this.tidspunkt;}
+	public String getTrekkType() {return this.trekkType;} 
 }

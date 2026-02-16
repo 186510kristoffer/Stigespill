@@ -17,6 +17,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import no.hvl.dat109.spring_stigespill.model.Spill;
 import no.hvl.dat109.spring_stigespill.model.Spiller;
+import no.hvl.dat109.spring_stigespill.model.Trekk;
 import no.hvl.dat109.spring_stigespill.service.StigespillService;
 import no.hvl.dat109.spring_stigespill.view.BrettPanel;
 
@@ -39,8 +40,10 @@ public class SpillController {
 	
 	@PostMapping("spill/{id}/trill")
 	public String trillTerning(@PathVariable("id") Long id, RedirectAttributes ra) {
-		String melding = stigespillService.spillTur(id);
-		ra.addFlashAttribute("melding", melding);
+		Trekk trekk = stigespillService.spillTur(id);
+		
+		ra.addFlashAttribute("trekklogg", stigespillService.hentLogg(id));
+		
 		return "redirect:/spill/"+id;
 	}	
 }
