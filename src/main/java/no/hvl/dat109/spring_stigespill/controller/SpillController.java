@@ -40,7 +40,9 @@ public class SpillController {
 	
 	@PostMapping("spill/{id}/trill")
 	public String trillTerning(@PathVariable("id") Long id, RedirectAttributes ra) {
-		Trekk trekk = stigespillService.spillTur(id);
+		
+		Trekk sisteTrekk = stigespillService.spillTur(id);
+		ra.addFlashAttribute("sisteTrekk", sisteTrekk);
 		
 		ra.addFlashAttribute("trekklogg", stigespillService.hentLogg(id));
 		

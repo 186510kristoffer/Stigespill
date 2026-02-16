@@ -69,7 +69,7 @@ public class StigespillService {
         oppdaterSekserTeller(spiller, kast);
         String type=sjekkRegler(spiller, kast);
         
-        if(type!="VANLIG") {
+        if(!type.equals("VANLIG")) {
         	boolean byttTur=(kast!=6);
         	avsluttTur(spill, spiller, kast, gammelPlass, spiller.getPosisjon(), byttTur, type);
         }
@@ -192,16 +192,7 @@ public class StigespillService {
      * @return Liste med enkle strenger som beskriver trekkene.
      */
     @Transactional(readOnly = true)
-    public List<String> hentLogg(Long spillId) {
-        List<Trekk> trekkListe = trekkRepository.findBySpillIdOrderByTidspunktAsc(spillId);
-        List<String> loggUt = new ArrayList<>();
-        
-        if (trekkListe == null) return loggUt;
-
-        for (Trekk t : trekkListe) {
-            loggUt.add(t.getSpillerNavn() + " trillet " + t.getTerningkast() + 
-                       " (Rute " + t.getFraRute() + " -> " + t.getTilRute() + ")");
-        }
-        return loggUt;
+    public List<Trekk> hentLogg(Long spillId) {
+        return trekkRepository.findBySpillIdOrderByTidspunktAsc(spillId);
     }
 }

@@ -1,14 +1,20 @@
 <!DOCTYPE html>
-<html xmlns:th="http//www.thymeleaf.com">
+<html xmlns:th="http://www.thymeleaf.org">
 	<head>
 	    <meta charset="UTF-8">
 	    <title>Stigespill</title>
 	</head>
 	<body>
-		<p th:text="Dette er spill nr ${spill.id}"></p>
+		<p th:text="|Dette er spill nr ${spill.id}|"></p>
 		<form th:action="@{/spill/{id}/trill(id=${spill.id})}" method="post">
-			<span th:if="${t.type == 'STIGE'}">Fant en stige!</span>
-			<span th:if="${t.type == 'SLANGE'}">Traff en slange</span>
+			<div th:if="${sisteTrekk != null}">
+				<p>hei</p>
+				<span th:if="${sisteTrekk.trekkType == 'STIGE'}">Fant en stige!</span>
+				<span th:if="${sisteTrekk.trekkType == 'SLANGE'}">Traff en slange</span>
+				<span th:if="${sisteTrekk.trekkType == 'START_BLOKKERT'}">start blokk</span>
+				<span th:if="${sisteTrekk.trekkType == 'START_UT'}">UT</span>
+				<span th:if="${sisteTrekk.trekkType == 'VNLIG'}">vanlig</span>
+			</div>
 			<button type="submit">Trill terning</button>
 		</form>
 	</body>
