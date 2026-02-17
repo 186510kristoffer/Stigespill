@@ -3,10 +3,21 @@
 	<head>
 	    <meta charset="UTF-8">
 	    <title>Stigespill</title>
+		<link rel="stylesheet" th:href="@{/css/style.css}" />
 	</head>
 	<body>
 		<h1>Sigespill:</h1>
-		<p th:text="|Dette er spill nr ${spill.id}|"></p>
+		<p th:text="|Spill nr ${spill.id}|"></p>
+		
+		<div class="spillbrett-wrapper">
+		        <div th:each="s : ${spill.spillere}" 
+		             class="spillerBrikke"
+		             th:data-posisjon="${s.posisjon}"
+		             th:style="'background-color: ' + ${s.farge ?: 'red'}">
+		             <span th:text="${#strings.substring(s.navn,0,1)}"></span>
+		        </div>
+		    </div>
+		
 		<form th:action="@{/spill/{id}/trill(id=${spill.id})}" method="post">
 			<div th:if="${sisteTrekk != null}">
 				<span th:text="|${sisteTrekk.spillerNavn} trillet ${sisteTrekk.terningkast}, fra ${sisteTrekk.fraRute} til ${sisteTrekk.tilRute}|"></span>
