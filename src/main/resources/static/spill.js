@@ -3,10 +3,10 @@ document.addEventListener("DOMContentLoaded", ()=>{
 });
 
 function flyttAlleBrikker(){
-	document.querySelectorAll('.spillerBrikke');
+	const brikker=document.querySelectorAll('.spillerBrikke');
 	
 	brikker.forEach(brikke=>{
-		let posisjon = parseInt(brikke.getAttributeData('data-posisjon'));
+		let posisjon = parseInt(brikke.getAttribute('data-posisjon'));
 		
 		if(!posisjon || posisjon<1) {
 			posisjon=1;
@@ -15,10 +15,10 @@ function flyttAlleBrikker(){
 			posisjon=100;
 		}
 		
-		const kooridinater= beregnKoordinater(posisjon);
+		const koordinater= beregnKoordinater(posisjon);
 		
 		brikke.style.left=koordinater.left +'%';
-		brikke.style.bottom = koordinater + '%';
+		brikke.style.bottom = koordinater.bottom + '%';
 	})
 	
 	function beregnKoordinater(posisjon){
@@ -27,7 +27,7 @@ function flyttAlleBrikker(){
 		let kolonne = index%10;
 		
 		if((rad%2)==1){
-			kolonne=rad-9;
+			kolonne=9-kolonne;
 		}
 		
 		return {

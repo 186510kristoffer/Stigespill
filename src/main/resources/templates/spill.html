@@ -20,27 +20,30 @@
 		
 		<form th:action="@{/spill/{id}/trill(id=${spill.id})}" method="post">
 			<div th:if="${sisteTrekk != null}">
-				<span th:text="|${sisteTrekk.spillerNavn} trillet ${sisteTrekk.terningkast}, fra ${sisteTrekk.fraRute} til ${sisteTrekk.tilRute}|"></span>
-				
-				<span th:if="${sisteTrekk.trekkType == 'STIGE'}" 
-					th:text="|(STIGE fra ${sisteTrekk.fraRute + sisteTrekk.terningkast} til ${sisteTrekk.tilRute})|">stige</span>
-					
-				<span th:if="${sisteTrekk.trekkType == 'SLANGE'}" 
-					th:text="|(SLANGE fra ${sisteTrekk.fraRute + sisteTrekk.terningkast} til ${sisteTrekk.tilRute}|">slange</span>
-					
-				<span th:if="${sisteTrekk.trekkType == 'START_BLOKKERT'}">Du må trille 6 for å kunne gå ut av start.</span>
-				<span th:if="${sisteTrekk.trekkType == 'START_UT'}">Gratulerer, endelig kan du gå ut av start.</span>
-				<span th:if="${sisteTrekk.trekkType == 'VANLIG'}"></span>
-				<span th:if="${sisteTrekk.trekkType == 'VINNER'}">Gratulerer, du har vunnet!</span>
-				<span th:if="${sisteTrekk.trekkType == 'TRE_SEKSERE'}">Tre seksere på rad, tilbake til start.</span>
-				<p th:if="${sisteTrekk.terningkast == 6}">    Du fikk 6, du kan trille en gang til.   </p>
+			    <span th:text="|${sisteTrekk.spillerNavn} trillet ${sisteTrekk.terningkast}|"></span>
+
+			    <span th:if="${sisteTrekk.fraRute != sisteTrekk.tilRute}" 
+			          th:text="|, fra ${sisteTrekk.fraRute} til ${sisteTrekk.tilRute}|"></span>
+			    
+			    <span th:if="${sisteTrekk.trekkType == 'STIGE'}" 
+			          th:text="|(STIGE fra ${sisteTrekk.fraRute + sisteTrekk.terningkast} til ${sisteTrekk.tilRute})|"></span>
+			          
+			    <span th:if="${sisteTrekk.trekkType == 'SLANGE'}" 
+			          th:text="|(SLANGE fra ${sisteTrekk.fraRute + sisteTrekk.terningkast} til ${sisteTrekk.tilRute})|"></span>
+			          
+			    <span th:if="${sisteTrekk.trekkType == 'START_BLOKKERT'}">. Du må trille 6 for å kunne gå ut av start.</span>
+			    <span th:if="${sisteTrekk.trekkType == 'START_UT'}">. Gratulerer, endelig kan du gå ut av start!</span>
+			    <span th:if="${sisteTrekk.trekkType == 'VINNER'}">. Gratulerer, du har vunnet!</span>
+			    <span th:if="${sisteTrekk.trekkType == 'TRE_SEKSERE'}">. Tre seksere på rad, tilbake til start.</span>
+			    
+			    <p th:if="${sisteTrekk.terningkast == 6}">Du fikk 6, du kan trille en gang til.</p>
 			</div>
 			<button type="submit">Trill terning</button>
 			
 			<p></p>
 			<h2>Alle trekk:</h2>
-			<table th:each="t, index: ${trekklogg}">
-				<tr>
+			<table>
+				<tr th:each="t, index: ${trekklogg}">
 					<td th:text="|${t.spillerNavn}:  ${t.fraRute} til ${t.tilRute}  |   "></td>
 					<td th:if="${t.trekkType == 'STIGE'}">  (Stige)   </td>
 					<td th:if="${t.trekkType == 'SLANGE'}">  (Slange)  </td>
@@ -49,5 +52,6 @@
 				</tr>
 			</table>
 		</form>
+		<script th:src="@{/spill.js}"></script>
 	</body>
 </html>
