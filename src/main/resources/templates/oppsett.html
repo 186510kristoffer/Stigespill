@@ -3,88 +3,99 @@
 <head>
     <meta charset="UTF-8">
     <title>Nytt Spill</title>
-	<link rel="stylesheet" th:href="@{/css/style.css}" />
+    <link rel="stylesheet" th:href="@{/css/style.css}" />
 </head>
 <body>
-	<h1>Spillinstillinger</h1>
-    <form th:action="@{/oppsett}" th:object="${oppsett}" method="post">
-        <div>
-            <label>Hvor mange spillere?</label>
-            <select id="valgtAntall" th:field="*{antallSpillere}" onchange="oppdaterAntallInput(this)">
-                <option value="2">2</option>
-                <option value="3">3</option>
-                <option value="4">4</option>
-            </select>
-        </div>
-        <p></p>
-        <div id="f1"> 
-            <label>Spiller 1</label>
-            <input type="text" th:field="*{spillerNavn[0]}">
-			<select th:field="*{spillerFarge[0]}">
-			    <option value="red">Rød</option>
-			    <option value="blue">Blå</option>
-			    <option value="green">Grønn</option>
-			    <option value="black">Svart</option>
-			</select>
-        </div>
-		<p></p>
-        <div id="f2"> 
-            <label>Spiller 2</label>
-            <input type="text" th:field="*{spillerNavn[1]}">
-			<select th:field="*{spillerFarge[1]}">
-			    <option value="red">Rød</option>
-			    <option value="blue">Blå</option>
-			    <option value="green">Grønn</option>
-			    <option value="black">Svart</option>
-			</select>
-        </div>
-		<p></p>
-        <div id="f3" hidden> 
-            <label>Spiller 3</label>
-            <input type="text" th:field="*{spillerNavn[2]}">
-			<select th:field="*{spillerFarge[2]}">
-			    <option value="red">Rød</option>
-			    <option value="blue">Blå</option>
-			    <option value="green">Grønn</option>
-			    <option value="black">Svart</option>
-			</select>	
-        </div>
-		<p></p>
-        <div id="f4" hidden>
-            <label>Spiller 4</label>
-            <input type="text" th:field="*{spillerNavn[3]}">
-			<select th:field="*{spillerFarge[3]}">
-			    <option value="red">Rød</option>
-			    <option value="blue">Blå</option>
-			    <option value="green">Grønn</option>
-			    <option value="black">Svart</option>
-			</select>
-        </div>
-		<p></p>
-		<div>
-		    <label for="simuler">Simuler spill?</label>
-		    <input type="checkbox" th:field="*{simuler}" id="simuler">
-		</div>
-		<p></p>
-		
-        
-        <button type="submit">Start stigespillet</button>
-    </form>
+    <div class="oppsett-container">
+        <h1>Spillinstillinger</h1>
+        <form th:action="@{/oppsett}" th:object="${oppsett}" method="post">
+            <div class="form-group">
+                <label>Hvor mange spillere?</label>
+                <select id="valgtAntall" th:field="*{antallSpillere}" onchange="oppdaterAntallInput(this)">
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                    <option value="4">4</option>
+                </select>
+            </div>
+
+            <div id="f1" class="form-group"> 
+                <label>Spiller 1</label>
+                <div class="spiller-rad">
+                    <input type="text" th:field="*{spillerNavn[0]}">
+                    <select th:field="*{spillerFarge[0]}">
+                        <option value="red">Rød</option>
+                        <option value="blue">Blå</option>
+                        <option value="green">Grønn</option>
+                        <option value="black">Svart</option>
+                    </select>
+                </div>
+            </div>
+
+            <div id="f2" class="form-group"> 
+                <label>Spiller 2</label>
+                <div class="spiller-rad">
+                    <input type="text" th:field="*{spillerNavn[1]}">
+                    <select th:field="*{spillerFarge[1]}">
+                        <option value="red">Rød</option>
+                        <option value="blue">Blå</option>
+                        <option value="green">Grønn</option>
+                        <option value="black">Svart</option>
+                    </select>
+                </div>
+            </div>
+
+            <div id="f3" class="form-group" hidden> 
+                <label>Spiller 3</label>
+                <div class="spiller-rad">
+                    <input type="text" th:field="*{spillerNavn[2]}">
+                    <select th:field="*{spillerFarge[2]}">
+                        <option value="red">Rød</option>
+                        <option value="blue">Blå</option>
+                        <option value="green">Grønn</option>
+                        <option value="black">Svart</option>
+                    </select>
+                </div>
+            </div>
+
+            <div id="f4" class="form-group" hidden>
+                <label>Spiller 4</label>
+                <div class="spiller-rad">
+                    <input type="text" th:field="*{spillerNavn[3]}">
+                    <select th:field="*{spillerFarge[3]}">
+                        <option value="red">Rød</option>
+                        <option value="blue">Blå</option>
+                        <option value="green">Grønn</option>
+                        <option value="black">Svart</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-group" style="display: flex; align-items: center; gap: 10px;">
+                <label class="switch">
+                    <input type="checkbox" th:field="*{simuler}" id="simuler">
+                    <span class="slider"></span>
+                </label>
+                <span>Simuler spill?</span>
+            </div>
+            
+            <button type="submit">Start stigespillet</button>
+        </form>
+    </div>
 
     <script>
         function oppdaterAntallInput(select){
-			const antall = parseInt(select.value);
-			for(let i=3; i<=4; i++){	
-				const element= document.getElementById('f'+i);
-				if(element){
-					element.hidden=(antall<i);
-						
-					if(element.hidden){
-						element.querySelector('input').value="";
-					}
-				}
-			}
-		}
+            const antall = parseInt(select.value);
+            for(let i=1; i<=4; i++){	
+                const element = document.getElementById('f'+i);
+                if(element){
+                    element.hidden = (i > antall);
+                    if(element.hidden){
+                        const input = element.querySelector('input');
+                        if(input) input.value = "";
+                    }
+                }
+            }
+        }
     </script>
 </body>
 </html>
