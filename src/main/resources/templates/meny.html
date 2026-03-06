@@ -1,12 +1,38 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org"> <head>
+<html xmlns:th="http://www.thymeleaf.org"> 
+<head>
     <meta charset="UTF-8">
     <title>Meny</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}" />
+    <style>
+        /* Ekstra styling kun for meny-knappene */
+        .meny-btn {
+            display: block;
+            width: 100%;
+            text-align: center;
+            background-color: #3498db;
+            color: white;
+            padding: 1.2rem;
+            border-radius: 6px;
+            font-size: 1.2rem;
+            font-weight: bold;
+            text-decoration: none;
+            margin-bottom: 1rem;
+            box-sizing: border-box;
+            transition: background 0.3s, transform 0.1s;
+        }
+        .meny-btn:hover { background-color: #2980b9; transform: scale(1.02); }
+        .meny-btn-start { background-color: #4CAF50; }
+        .meny-btn-start:hover { background-color: #45a049; }
+    </style>
 </head>
 <body>
-	<h1>Meny</h1>
-	<p><a th:href="@{/oppsett}">Start nytt spill</a></p>
-	<p><a th:href="@{/logg}">Logg</a></p>
-	
-    </body>
+    <div class="oppsett-container">
+        <h1>Hovedmeny</h1>
+        <p style="text-align: center; color: #777; margin-bottom: 2rem;">Velkommen til Stigespillet!</p>
+        
+        <a th:href="@{/oppsett}" class="meny-btn meny-btn-start">Start nytt spill</a>
+        <a th:href="@{/logg}" class="meny-btn">Se Historikk / Logg</a>
+    </div>
+</body>
 </html>

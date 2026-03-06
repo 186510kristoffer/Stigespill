@@ -134,33 +134,29 @@ public class StigespillService {
      * @param gammelPlass Posisjon før flytting.
      * @return trekk i form av avsluttTur(...).
      */
-    private Trekk utforFlytting(Spill spill, Spiller spiller, Brett brett, int kast, int gammelPlass) {
-    	
+private Trekk utforFlytting(Spill spill, Spiller spiller, Brett brett, int kast, int gammelPlass) {
+        
         if (gammelPlass + kast > 100) {
-        	boolean byttTur=(kast!=6);
+            boolean byttTur = (kast != 6);
             return avsluttTur(spill, spiller, kast, gammelPlass, gammelPlass, byttTur, "FORBI");
         }
         
         int landerPaa = gammelPlass + kast;
         int nyPlass = brett.finnDestinasjon(gammelPlass, kast);
         spiller.setPosisjon(nyPlass);
-        String type="VANLIG";
         
-        if(gammelPlass==1) {
-        	type="START_UT";
+        String type = "VANLIG";
+        if (nyPlass == 100) {
+            type = "VINNER";
+        } else if (nyPlass > landerPaa) {
+            type = "STIGE";
+        } else if (nyPlass < landerPaa) {
+            type = "SLANGE";
+        } else if (gammelPlass == 1) {
+            type = "START_UT";
         }
-        
-        if(nyPlass>landerPaa) {
-        	type="STIGE";
-        }
-        else if(nyPlass<landerPaa) {
-        	type="SLANGE";
-        }
-        else if(nyPlass==100) {
-        	type="VINNER";
-        }
-        boolean byttTur = (kast!=6);
-        
+
+        boolean byttTur = (kast != 6 && !type.equals("VINNER"));
         return avsluttTur(spill, spiller, kast, gammelPlass, nyPlass, byttTur, type);
     }
 
@@ -173,20 +169,27 @@ public class StigespillService {
      * @param til Rute etter flytting.
      * @param byttTur Om turen skal gå videre til neste.
      */
-    private Trekk avsluttTur(Spill spill, Spiller s, int k, int fra, int til, boolean byttTur, String trekkType) {
-        
-    	Trekk trekk= new Trekk(spill, k, fra, til, s.getNavn(), LocalDateTime.now(), trekkType);
-        trekkRepository.save(trekk);
-        
-        if(spill.erFerdig()) {}
-        else if(byttTur) {
-            spill.setNesteSpillerIndex((spill.getNesteSpillerIndex() + 1) % spill.getSpillere().size());
-        }
-        spillerRepository.save(s);
-        spillRepository.save(spill);
-        
-        return trekk;
-    }
+	private Trekk avsluttTur(Spill spill, Spiller s, int k, int fra, int til, boolean byttTur, String trekkType) {
+	    
+	    Trekk trekk = new Trekk(spill, k, fra, til, s.getNavn(), LocalDateTime.now(), trekkType);
+	    
+	    if (trekkType.equals("VINNER")) {
+	        spill.setFerdig(true);
+	    }
+	    
+	    trekkRepository.save(trekk);
+	    
+	    if (spill.erFerdig()) {
+	    	
+	    } else if (byttTur) {
+	        spill.setNesteSpillerIndex((spill.getNesteSpillerIndex() + 1) % spill.getSpillere().size());
+	    }
+	    
+	    spillerRepository.save(s);
+	    spillRepository.save(spill);
+	    
+	    return trekk;
+	}
     
     /**
      * Henter spillet fra databasen.

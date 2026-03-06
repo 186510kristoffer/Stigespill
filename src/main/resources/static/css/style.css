@@ -1,11 +1,114 @@
+/* --- AI Generert styling --- */
+body {
+    background-color: #f0f2f5;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    margin: 0;
+    padding: 2rem 0;
+    box-sizing: border-box;
+}
+
+/* ========================================= */
+/* --- 1. OPPSETT.HTML STYLING --- */
+/* ========================================= */
+
+.oppsett-container {
+    background: white;
+    padding: 2.5rem;
+    border-radius: 12px;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.1);
+    width: 100%;
+    max-width: 450px;
+}
+
+.oppsett-container h1 { color: #333; text-align: center; margin-bottom: 1.5rem; margin-top: 0; }
+.form-group { margin-bottom: 1.2rem; }
+.form-group label { display: block; font-weight: 600; margin-bottom: 0.4rem; color: #555; }
+input[type="text"], select { width: 100%; padding: 0.6rem; border: 1px solid #ddd; border-radius: 6px; box-sizing: border-box; }
+.spiller-rad { display: grid; grid-template-columns: 2fr 1fr; gap: 10px; }
+
+button[type="submit"] {
+    width: 100%; 
+    background-color: #4CAF50; 
+    color: white; 
+    padding: 0.8rem;
+    border: none; 
+    border-radius: 6px; 
+    font-size: 1.1rem; 
+    font-weight: bold; 
+    cursor: pointer; 
+    margin-top: 1rem; 
+    transition: background 0.3s;
+}
+button[type="submit"]:hover { background-color: #45a049; }
+
+/* Toggle bryter for simulerings-knappen */
+.switch { position: relative; display: inline-block; width: 44px; height: 22px; }
+.switch input { opacity: 0; width: 0; height: 0; }
+.slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #ccc; transition: .4s; border-radius: 22px; }
+.slider:before { position: absolute; content: ""; height: 16px; width: 16px; left: 3px; bottom: 3px; background-color: white; transition: .4s; border-radius: 50%; }
+input:checked + .slider { background-color: #2ecc71; }
+input:checked + .slider:before { transform: translateX(22px); }
+
+
+/* ========================================= */
+/* --- 2. SPILL.HTML STYLING --- */
+/* ========================================= */
+
+.spill-container {
+    background: white;
+    padding: 2rem 3rem;
+    border-radius: 12px;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.1);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    /* Gitt boksen mye mer bredde for å bruke skjermen godt: */
+    max-width: 1300px; 
+    width: 95%;
+}
+
+.spill-header { text-align: center; width: 100%; margin-bottom: 1.5rem; }
+.spill-header h1 { margin: 0; color: #333; font-size: 2.5rem;}
+.spill-id { color: #777; font-weight: 500; margin-top: 5px; font-size: 1.1rem;}
+
+.spill-innhold {
+    display: flex;
+    flex-direction: row;
+    gap: 5rem; /* God avstand mellom venstre og høyre side */
+    width: 100%;
+    justify-content: center;
+    align-items: flex-start;
+}
+
+.venstre-kolonne {
+    flex: 1;
+    max-width: 500px;
+    display: flex;
+    flex-direction: column;
+}
+
+.hoyre-kolonne {
+    flex: 0 0 auto; /* Hindrer at høyre kolonne blir krympet av nettleseren */
+}
+
+/* Spillbrettet - Flex-shrink stopper nettleseren fra å skvise brettet */
 .spillbrett-wrapper {
     position: relative;
     width: 600px;
     height: 600px;
+    min-width: 600px; /* Ekstra sikring mot skvising */
+    min-height: 600px; /* Ekstra sikring mot skvising */
+    flex-shrink: 0;   /* Nekter brettet å bli mindre */
     background-image: url('/images/Brett.png');
     background-size: cover;
     border: 2px solid #333;
-    margin: 20px auto;
+    margin: 0;
+    border-radius: 6px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
 }
 
 .spillerBrikke {
@@ -23,93 +126,68 @@
     justify-content: center;
     color: black;
     font-weight: bold;
-    font-size: 10px;
-    text-shadow: 1px 1px 2px black;
+    font-size: 14px; 
+    text-shadow: 1px 1px 2px white;
     z-index: 10;
 }
 
-body {
-    background-color: #f0f2f5;
-    font-family: 'Segoe UI', sans-serif;
+.spill-kontroller { width: 100%; display: flex; flex-direction: column; }
+
+.hendelse-logg {
+    background: #f8f9fa;
+    border-left: 5px solid #3498db;
+    padding: 1.5rem;
+    margin: 0 0 1.5rem 0;
+    width: 100%;
+    box-sizing: border-box;
+    min-height: 100px;
     display: flex;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
-    min-height: 100vh;
-    margin: 0;
+    text-align: center;
+    font-size: 1.2rem;
+    font-weight: 500;
+    border-radius: 0 6px 6px 0;
 }
 
-.oppsett-container {
-    background: white;
-    padding: 2.5rem;
-    border-radius: 12px;
-    box-shadow: 0 8px 24px rgba(0,0,0,0.1);
+.ekstra-kast { color: #e67e22; font-weight: bold; margin: 0.5rem 0 0 0; }
+
+.trill-btn {
     width: 100%;
-    max-width: 450px;
+    font-size: 1.3rem;
+    padding: 1.2rem 2rem;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
 }
 
-h1 { color: #333; text-align: center; margin-bottom: 1.5rem; }
-
-.form-group { margin-bottom: 1.2rem; }
-
-label { 
-    display: block; 
-    font-weight: 600; 
-    margin-bottom: 0.4rem; 
-    color: #555;
-}
-
-input[type="text"], select {
+.trekklogg-seksjon {
     width: 100%;
-    padding: 0.6rem;
+    margin-top: 2.5rem;
+    border-top: 1px solid #eee;
+    padding-top: 1.5rem;
+}
+
+.trekklogg-seksjon h2 { font-size: 1.3rem; color: #555; margin-bottom: 0.8rem; text-align: left; }
+
+.tabell-wrapper {
+    max-height: 300px;
+    overflow-y: auto;
     border: 1px solid #ddd;
     border-radius: 6px;
-    box-sizing: border-box;
 }
 
-.spiller-rad {
-    display: grid;
-    grid-template-columns: 2fr 1fr;
-    gap: 10px;
-}
+table { width: 100%; border-collapse: collapse; }
+td { padding: 0.8rem; border-bottom: 1px solid #eee; font-size: 1.1rem; }
+tr:last-child td { border-bottom: none; }
+.trekk-stige { color: #2ecc71; font-weight: bold; }
+.trekk-slange { color: #e74c3c; font-weight: bold; }
+.trekk-vinner { color: #f1c40f; font-weight: bold; }
 
-button[type="submit"] {
-    width: 100%;
-    background-color: #4CAF50;
-    color: white;
-    padding: 0.8rem;
-    border: none;
-    border-radius: 6px;
-    font-size: 1rem;
-    font-weight: bold;
-    cursor: pointer;
-    margin-top: 1rem;
+/* Mobilvisning / Mindre skjermer */
+@media (max-width: 1200px) {
+    .spill-innhold {
+        flex-direction: column-reverse;
+        align-items: center;
+        gap: 2rem;
+    }
 }
-
-button:hover { background-color: #45a049; }
-
-.switch {
-  position: relative;
-  display: inline-block;
-  width: 44px;
-  height: 22px;
-}
-.switch input { opacity: 0; width: 0; height: 0; }
-.slider {
-  position: absolute;
-  cursor: pointer;
-  top: 0; left: 0; right: 0; bottom: 0;
-  background-color: #ccc;
-  transition: .4s;
-  border-radius: 22px;
-}
-.slider:before {
-  position: absolute;
-  content: "";
-  height: 16px; width: 16px;
-  left: 3px; bottom: 3px;
-  background-color: white;
-  transition: .4s;
-  border-radius: 50%;
-}
-input:checked + .slider { background-color: #2ecc71; }
-input:checked + .slider:before { transform: translateX(22px); }
