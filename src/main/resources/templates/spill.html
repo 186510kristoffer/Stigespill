@@ -13,6 +13,7 @@
 		        <div th:each="s : ${spill.spillere}" 
 		             class="spillerBrikke"
 		             th:data-posisjon="${s.posisjon}"
+					 th:data-start-posisjon="${s.getForrigePosisjon(sisteTrekk)}"
 		             th:style="'background-color: ' + ${s.farge ?: 'red'}">
 		             <span th:text="${#strings.substring(s.navn,0,1)}"></span>
 		        </div>

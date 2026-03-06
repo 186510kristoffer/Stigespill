@@ -15,14 +15,26 @@ public class OppsettService {
 		
 		int antall = spillOppsett.getAntallSpillere();
 		List <String> navnene = spillOppsett.getSpillerNavn();
-		
+		List<String> fargene = spillOppsett.getSpillerFarge();
 		List<Spiller> spillere = new ArrayList<>();
 		
+		
 		for (int i=0; i<antall; i++) {
-			String navn = navnene.get(i);
-			if(navn!=null && !navn.isEmpty()){
-				spillere.add(new Spiller(navn, "F"+(i+1)));
+			String navn="Spiller"+(i+1);
+			String farge="red";
+			
+			
+			if(i<navnene.size()) {
+				if(navnene.get(i)!=null&&!navnene.get(i).trim().isEmpty()) {
+					navn=navnene.get(i);
+				}
 			}
+			if(i<fargene.size()) {
+				if(fargene.get(i)!=null&&!fargene.get(i).isEmpty()) {
+					farge=fargene.get(i);
+				}
+			}
+			spillere.add(new Spiller(navn, farge));
 		}
 		return spillere;
 	}

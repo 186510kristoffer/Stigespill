@@ -66,4 +66,11 @@ public class Spiller {
 	public void setAntallSekserePaaRad(int nyttAntall) {
 		this.antallSekserePaaRad=nyttAntall;
 	}
+	
+	public int getForrigePosisjon(Trekk sisteTrekk) {
+		if(sisteTrekk!=null&&sisteTrekk.getSpillerNavn().equals(this.navn)) {
+			return sisteTrekk.getFraRute();
+		}
+		return this.posisjon;
+	}
 }

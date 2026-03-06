@@ -11,5 +11,6 @@ import lombok.NoArgsConstructor;
 public class SpillOppsett {
 	private int antallSpillere;
 	private List<String> spillerNavn= new ArrayList<>();
-	private boolean simuler=false;
+	private List<String> spillerFarge= new ArrayList<>();
+	private boolean simuler;
 }
