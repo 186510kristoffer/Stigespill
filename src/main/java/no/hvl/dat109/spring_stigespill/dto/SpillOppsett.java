@@ -12,5 +12,5 @@ public class SpillOppsett {
 	private int antallSpillere;
 	private List<String> spillerNavn= new ArrayList<>();
 	private List<String> spillerFarge= new ArrayList<>();
-	private boolean simuler;
+	private boolean simuler=false;
 }
