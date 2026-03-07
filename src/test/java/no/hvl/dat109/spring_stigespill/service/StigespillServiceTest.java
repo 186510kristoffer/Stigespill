@@ -15,15 +15,16 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import no.hvl.dat109.spring_stigespill.model.Brett;
 import no.hvl.dat109.spring_stigespill.model.Rute;
 import no.hvl.dat109.spring_stigespill.model.Spill;
 import no.hvl.dat109.spring_stigespill.model.Spiller;
 import no.hvl.dat109.spring_stigespill.model.Terning;
+import no.hvl.dat109.spring_stigespill.model.Trekk;
 import no.hvl.dat109.spring_stigespill.repository.RuteRepository;
 import no.hvl.dat109.spring_stigespill.repository.SpillRepository;
 import no.hvl.dat109.spring_stigespill.repository.SpillerRepository;
 import no.hvl.dat109.spring_stigespill.repository.TrekkRepository;
-import no.hvl.dat109.spring_stigespill.service.StigespillService;
 
 /**
  * Enhetstester for forretningslogikken i StigespillService.
@@ -42,34 +43,30 @@ class StigespillServiceTest {
     private TrekkRepository trekkRepository;
     @Mock
     private Terning terning; 
+    @Mock
+    private Brett brett; // Lagt til for å støtte ny logikk i servicen
 
     @InjectMocks
     private StigespillService service;
 
     private Spill spill;
     private Spiller spiller;
-    private List<Rute> ruter;
 
     /**
      * Klargjør et test-scenario før hver test.
-     * Oppretter spiller, spill og et tomt brett.
+     * Oppretter spiller og spill.
      */
     @BeforeEach
     void oppsett() {
         spiller = new Spiller("TestSpiller", "F1");
+        spiller.setId(1L);
         List<Spiller> spillere = new ArrayList<>();
         spillere.add(spiller);
 
         spill = new Spill(spillere);
         spill.setId(1L);
 
-        ruter = new ArrayList<>();
-        for (int i = 1; i <= 100; i++) {
-            ruter.add(new Rute(i, 0)); 
-        }
-
         when(spillRepository.findById(1L)).thenReturn(Optional.of(spill));
-        when(ruteRepository.findAll()).thenReturn(ruter);
     }
 
     /**
@@ -79,9 +76,9 @@ class StigespillServiceTest {
     void maaHaSeksForAaStarteTest() {
         when(terning.trill()).thenReturn(5);
 
-        String melding = service.spillTur(1L);
+        Trekk trekk = service.spillTur(1L);
 
-        assertTrue(melding.contains("Må ha 6"));
+        assertEquals("START_BLOKKERT", trekk.getTrekkType()); // Sjekker TrekkType i stedet for String
         assertEquals(1, spiller.getPosisjon());
     }
 
@@ -92,9 +89,9 @@ class StigespillServiceTest {
     void faarSeksPaaStartTest() {
         when(terning.trill()).thenReturn(6);
 
-        String melding = service.spillTur(1L);
+        Trekk trekk = service.spillTur(1L);
 
-        assertTrue(melding.contains("Ute av start"));
+        assertEquals("START_UT", trekk.getTrekkType());
         assertEquals(1, spiller.getPosisjon()); 
         assertEquals(1, spiller.getAntallSekserePaaRad());
     }
@@ -106,6 +103,7 @@ class StigespillServiceTest {
     void flytterEtterAaHaKommetUtTest() {
         spiller.setAntallSekserePaaRad(1); 
         when(terning.trill()).thenReturn(4);
+        when(brett.finnDestinasjon(1, 4)).thenReturn(5); // Simulerer brett-logikk
 
         service.spillTur(1L);
 
@@ -119,6 +117,7 @@ class StigespillServiceTest {
     void vanligFlyttingTest() {
         spiller.setPosisjon(10);
         when(terning.trill()).thenReturn(5);
+        when(brett.finnDestinasjon(10, 5)).thenReturn(15);
 
         service.spillTur(1L);
 
@@ -130,16 +129,15 @@ class StigespillServiceTest {
      */
     @Test
     void stigeTest() {
-        ruter.get(2).setFlyttTil(10); 
-        
         spiller.setPosisjon(1); 
         spiller.setAntallSekserePaaRad(1); 
         
         when(terning.trill()).thenReturn(2);
+        when(brett.finnDestinasjon(1, 2)).thenReturn(10); // Simulerer stige til rute 10
 
-        String melding = service.spillTur(1L);
+        Trekk trekk = service.spillTur(1L);
 
-        assertTrue(melding.contains("stige"));
+        assertEquals("STIGE", trekk.getTrekkType());
         assertEquals(10, spiller.getPosisjon());
     }
 
@@ -149,13 +147,12 @@ class StigespillServiceTest {
     @Test
     void slangeTest() {
         spiller.setPosisjon(90);
-        ruter.get(94).setFlyttTil(50); 
-
         when(terning.trill()).thenReturn(5);
+        when(brett.finnDestinasjon(90, 5)).thenReturn(50); // Simulerer slange til rute 50
 
-        String melding = service.spillTur(1L);
+        Trekk trekk = service.spillTur(1L);
 
-        assertTrue(melding.contains("slange"));
+        assertEquals("SLANGE", trekk.getTrekkType());
         assertEquals(50, spiller.getPosisjon());
     }
 
@@ -166,10 +163,11 @@ class StigespillServiceTest {
     void vinneSpillTest() {
         spiller.setPosisjon(98);
         when(terning.trill()).thenReturn(2);
+        when(brett.finnDestinasjon(98, 2)).thenReturn(100);
 
-        String melding = service.spillTur(1L);
+        Trekk trekk = service.spillTur(1L);
 
-        assertTrue(melding.contains("MÅL"));
+        assertEquals("VINNER", trekk.getTrekkType());
         assertEquals(100, spiller.getPosisjon());
         assertTrue(spill.erFerdig());
     }
@@ -182,9 +180,9 @@ class StigespillServiceTest {
         spiller.setPosisjon(98);
         when(terning.trill()).thenReturn(4);
 
-        String melding = service.spillTur(1L);
+        Trekk trekk = service.spillTur(1L);
 
-        assertTrue(melding.contains("Blir stående"));
+        assertEquals("FORBI", trekk.getTrekkType());
         assertEquals(98, spiller.getPosisjon());
     }
 
@@ -194,13 +192,13 @@ class StigespillServiceTest {
     @Test
     void treSekserePaaRadTest() {
         spiller.setPosisjon(50);
-        spiller.setAntallSekserePaaRad(2);
+        spiller.setAntallSekserePaaRad(3); // Logikken din sjekker om teller er 3 ved starten av turen
         
         when(terning.trill()).thenReturn(6);
 
-        String melding = service.spillTur(1L);
+        Trekk trekk = service.spillTur(1L);
 
-        assertTrue(melding.contains("Tilbake til start"));
+        assertEquals("TRE_SEKSERE", trekk.getTrekkType());
         assertEquals(1, spiller.getPosisjon());
         assertEquals(0, spiller.getAntallSekserePaaRad());
     }

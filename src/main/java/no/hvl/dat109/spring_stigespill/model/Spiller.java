@@ -73,4 +73,9 @@ public class Spiller {
 		}
 		return this.posisjon;
 	}
+
+	public void setId(long id) {
+		this.id=id;
+		
+	}
 }
