@@ -4,7 +4,7 @@ DELETE FROM rute;
 -- SPESIALRUTER
 
 -- Slanger (Ned)
-INSERT INTO rute (id, flytt_til) VALUES (98, 68);
+INSERT INTO rute (id, flytt_til) VALUES (98, 58);
 INSERT INTO rute (id, flytt_til) VALUES (93, 76);
 INSERT INTO rute (id, flytt_til) VALUES (89, 48);
 INSERT INTO rute (id, flytt_til) VALUES (43, 2);
