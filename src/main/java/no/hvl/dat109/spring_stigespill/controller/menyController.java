@@ -13,6 +13,6 @@ public class menyController {
 	
 	@GetMapping("/")
 	public String visMeny() {
-		return "/meny";
+		return "meny";
 	}
 }
